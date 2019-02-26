@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "module": "amd",
+        "target": "es5",
+        "sourceMap": true,
+        "allowSyntheticDefaultImports":true,
+        "outFile": "dist/build.js"
+    },
+    "exclude": [
+        "assets",
+        "vendor"
+    ]
+}

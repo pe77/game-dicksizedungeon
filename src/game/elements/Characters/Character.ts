@@ -1,0 +1,49 @@
+import { PkElement } from "../../../pkframe/element/PkElement";
+import { ICharacter } from "./Base";
+import { PkScene } from "../../../pkframe/scene/PKScene";
+
+export class Character extends PkElement implements ICharacter
+{
+    // meta
+    name:string = "Char-Name";
+    
+    // stats
+    hp:number  = 1; // health points
+    atk:number = 1; // attack
+
+    spriteBase:Phaser.GameObjects.Sprite;
+    animationIdle:Phaser.Animations.Animation;
+    
+    constructor(scene:PkScene)
+    {
+        super(scene);
+    }
+
+    create()
+    {
+        if(this.animationIdle)
+            this.spriteBase = this.scene.add.sprite(0, 0, this.animationIdle.frames[0].textureKey);
+        else
+            this.spriteBase = this.scene.add.sprite(0, 0, '');
+        //
+
+        this.spriteBase.setOrigin(0, 0);
+        this.add(this.spriteBase);
+        this.idle();
+    }
+
+    attack(char:Character):number
+    {
+        return 0;
+    }
+
+    idle()
+    {
+        this.spriteBase.play('idle' + this.getId());
+    }
+
+    idleStop()
+    {
+        this.spriteBase.anims.stop();
+    }
+}
