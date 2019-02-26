@@ -139,15 +139,19 @@ define("pkframe/scene/PkTransition", ["require", "exports", "pkframe/scene/trans
         };
         // This is called when the state preload has finished and creation begins
         PkTransition.prototype.endStartAnimation = function (e) {
+            console.log('111');
             // remove current scene
-            // this.scene.shutdown();
+            this.scene.shutdown();
             this.scene.scene.stop();
+            console.log('222');
             // get next
             var nextScene = this.game.scene.getScene(this.to);
+            console.log('333');
             // change to next scene
             nextScene.events.on('transitionstart', function () {
                 console.log('=== -scene render');
             });
+            console.log('444');
             nextScene.scene.start();
             nextScene.initData = this.params;
         };
@@ -208,14 +212,15 @@ define("pkframe/scene/PKScene", ["require", "exports", "pkframe/scene/PkTransiti
                     }
                 }
                 ;
-                if (!exist) {
-                    // add to layer
-                    this.layers.push({
-                        name: layerName,
-                        total: 0,
-                        group: (new PkElement_1.PkElement(this)) // this.game.add.group()
-                    });
-                }
+                if (exist)
+                    this.layers.splice(i, 1);
+                //
+                // add to layer
+                this.layers.push({
+                    name: layerName,
+                    total: 0,
+                    group: (new PkElement_1.PkElement(this)) // this.game.add.group()
+                });
             };
             _this.addToLayer = function (layerName, element) {
                 var exist = false;
@@ -237,17 +242,14 @@ define("pkframe/scene/PKScene", ["require", "exports", "pkframe/scene/PkTransiti
                 for (var i = 0; i < this.layers.length; i++)
                     this.children.bringToTop(this.layers[i].group);
                 //
-                this.bringLayerToTop('transition'); // transition layer always on top
             };
             return _this;
         }
         PkScene.prototype.init = function () {
-            console.log('SCENE INIT');
             this.transition = new PkTransition_2.PkTransition(this);
         };
         PkScene.prototype.preload = function () {
-            console.log('scene preload');
-            // this.transition.transitionAnimation.end();
+            this.transition.transitionAnimation.end();
         };
         PkScene.prototype.getGame = function () {
             return this.game;
@@ -269,10 +271,6 @@ define("pkframe/scene/PKScene", ["require", "exports", "pkframe/scene/PkTransiti
             //
         };
         PkScene.prototype.create = function () {
-            this.addLayer('transition');
-            this.transition.transitionAnimation.end();
-            // console.log('PkScene create');
-            // this.scene.
         };
         PkScene.prototype.shutdown = function () {
         };
@@ -571,19 +569,6 @@ define("game/Loader", ["require", "exports", "pkframe/PkGame", "pkframe/PkLoader
     }(PkLoader_2.PkLoader));
     exports.Loader = Loader;
 });
-define("game/Types", ["require", "exports"], function (require, exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    var T;
-    (function (T) {
-        var Heroes;
-        (function (Heroes) {
-            Heroes[Heroes["KNIGHT"] = 0] = "KNIGHT";
-            Heroes[Heroes["MAGE"] = 1] = "MAGE";
-            Heroes[Heroes["ROGUE"] = 2] = "ROGUE";
-        })(Heroes = T.Heroes || (T.Heroes = {}));
-    })(T = exports.T || (exports.T = {}));
-});
 define("game/elements/Characters/Base", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -714,195 +699,6 @@ define("game/elements/Characters/Heroes/Knight", ["require", "exports", "game/el
     }(Hero_1.Hero));
     exports.Knight = Knight;
 });
-define("game/elements/Characters/Heroes/Mage", ["require", "exports", "game/elements/Characters/Hero"], function (require, exports, Hero_2) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    var Mage = /** @class */ (function (_super) {
-        __extends(Mage, _super);
-        function Mage(scene) {
-            var _this = _super.call(this, scene) || this;
-            // meta
-            _this.name = "Mage";
-            // stats
-            _this.ap = 3; // action points
-            _this.hp = 3; // health points
-            _this.atk = 4; // attack
-            _this.animationIdle = _this.scene.anims.create({
-                key: 'idle' + _this.getId(),
-                frames: [
-                    { key: 'mage-idle-1' },
-                    { key: 'mage-idle-2' },
-                    { key: 'mage-idle-3' },
-                    { key: 'mage-idle-4' }
-                ],
-                frameRate: 8,
-                repeat: -1
-            });
-            return _this;
-        }
-        return Mage;
-    }(Hero_2.Hero));
-    exports.Mage = Mage;
-});
-define("game/elements/Characters/Heroes/Rogue", ["require", "exports", "game/elements/Characters/Hero"], function (require, exports, Hero_3) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    var Rogue = /** @class */ (function (_super) {
-        __extends(Rogue, _super);
-        function Rogue(scene) {
-            var _this = _super.call(this, scene) || this;
-            // meta
-            _this.name = "Rogue";
-            // stats
-            _this.ap = 5; // action points
-            _this.hp = 2; // health points
-            _this.atk = 4; // attack
-            _this.animationIdle = _this.scene.anims.create({
-                key: 'idle' + _this.getId(),
-                frames: [
-                    { key: 'rogue-idle-1' },
-                    { key: 'rogue-idle-2' },
-                    { key: 'rogue-idle-3' },
-                    { key: 'rogue-idle-4' }
-                ],
-                frameRate: 8,
-                repeat: -1
-            });
-            return _this;
-        }
-        return Rogue;
-    }(Hero_3.Hero));
-    exports.Rogue = Rogue;
-});
-define("pkframe/scene/transitions/Slide", ["require", "exports", "pkframe/event/PkEvent", "pkframe/scene/PkTransition"], function (require, exports, PkEvent_3, PkTransition_3) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    var PkTransitionSlide = /** @class */ (function () {
-        function PkTransitionSlide(scene) {
-            this.event = new PkEvent_3.PkEvent('Transitions.Slide', this);
-            this.changeTime = 300; // ms
-            this.scene = scene;
-        }
-        PkTransitionSlide.prototype.start = function () {
-            var _this = this;
-            console.log('slide start');
-            // create bg
-            var points = [
-                (this.scene.game.canvas.width / 2) * (-1), 0,
-                this.scene.game.canvas.width, 0,
-                this.scene.game.canvas.width, this.scene.game.canvas.height,
-                0, this.scene.game.canvas.height // 3
-            ];
-            var poly = this.scene.add.polygon(this.scene.game.canvas.width * 1.5, 0, points, 0x000000);
-            poly.setOrigin(0, 0);
-            this.scene.add.tween({
-                targets: poly,
-                x: 0,
-                duration: this.changeTime,
-                onComplete: function () {
-                    // dispatch end transition | mandatory
-                    _this.event.dispatch(PkTransition_3.E.OnTransitionEndStart);
-                },
-                onUpdate: function () {
-                    _this.scene.children.bringToTop(poly);
-                }
-            });
-        };
-        PkTransitionSlide.prototype.end = function () {
-            var _this = this;
-            console.log('slide end');
-            this.scene.scene.setVisible(false);
-            var points = [
-                0, 0,
-                this.scene.game.canvas.width, 0,
-                this.scene.game.canvas.width + (this.scene.game.canvas.width / 2), this.scene.game.canvas.height,
-                0, this.scene.game.canvas.height // 3
-            ];
-            var poly = this.scene.add.polygon(0, 0, points, 0x000000);
-            poly.setOrigin(0, 0);
-            this.scene.add.tween({
-                targets: poly,
-                x: -(this.scene.game.canvas.width * 1.5),
-                duration: this.changeTime,
-                onComplete: function () {
-                    // dispatch end transition | mandatory
-                    _this.event.dispatch(PkTransition_3.E.OnTransitionEndEnd);
-                },
-                onUpdate: function () {
-                    _this.scene.children.bringToTop(poly);
-                    _this.scene.scene.setVisible(true);
-                }
-            });
-        };
-        return PkTransitionSlide;
-    }());
-    exports.PkTransitionSlide = PkTransitionSlide;
-});
-define("game/scenes/TextScene", ["require", "exports", "pkframe/scene/PKScene", "game/Types", "game/elements/Characters/Heroes/Knight", "game/elements/Characters/Heroes/Mage", "game/elements/Characters/Heroes/Rogue", "pkframe/scene/transitions/Slide"], function (require, exports, PKScene_3, Types_1, Knight_1, Mage_1, Rogue_1, Slide_1) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    var TextScene = /** @class */ (function (_super) {
-        __extends(TextScene, _super);
-        function TextScene() {
-            return _super !== null && _super.apply(this, arguments) || this;
-        }
-        TextScene.prototype.init = function () {
-            _super.prototype.init.call(this);
-            this.transition.transitionAnimation = new Slide_1.PkTransitionSlide(this);
-        };
-        TextScene.prototype.create = function () {
-            _super.prototype.create.call(this);
-            console.log('- TextScene create ');
-            if (!this.initData.length)
-                return;
-            //
-            switch (this.initData[0]) {
-                case Types_1.T.Heroes.KNIGHT:
-                    this.hero = new Knight_1.Knight(this);
-                    break;
-                case Types_1.T.Heroes.MAGE:
-                    this.hero = new Mage_1.Mage(this);
-                    break;
-                case Types_1.T.Heroes.ROGUE:
-                    this.hero = new Rogue_1.Rogue(this);
-                    break;
-                default:
-                    break;
-            }
-            this.hero.create();
-            setTimeout(function () {
-                console.log('back');
-                // this.transition.change('HeroSelect')
-            }, 1500);
-            /*
-            
-            var points:Array<number> = [
-                0, 0, // 1
-                this.game.canvas.width, 0,  // 2
-                this.game.canvas.width + (this.game.canvas.width / 2), this.game.canvas.height, // 4
-                0, this.game.canvas.height // 3
-            ]
-    
-            this.poly = this.add.polygon(0, 0, points, 0x0000FF);
-            this.poly.setOrigin(0, 0);
-            
-    
-    
-            
-    
-            setTimeout(()=>{
-                console.log('--?')
-                this.poly.x = -this.poly.width;
-            }, 1500)
-            */
-        };
-        TextScene.prototype.update = function () {
-            // this.poly.x -= 0.5;
-        };
-        return TextScene;
-    }(PKScene_3.PkScene));
-    exports.TextScene = TextScene;
-});
 define("game/elements/Text/MiniText", ["require", "exports", "pkframe/element/PkElement"], function (require, exports, PkElement_3) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -1016,7 +812,69 @@ define("game/elements/Text/MiniPhrase", ["require", "exports", "pkframe/element/
     }(PkElement_4.PkElement));
     exports.MiniPhrase = MiniPhrase;
 });
-define("game/scenes/Main", ["require", "exports", "pkframe/scene/PKScene", "game/elements/Characters/Heroes/Knight", "game/elements/Text/MiniPhrase"], function (require, exports, PKScene_4, Knight_2, MiniPhrase_1) {
+define("pkframe/scene/transitions/Slide", ["require", "exports", "pkframe/event/PkEvent", "pkframe/scene/PkTransition"], function (require, exports, PkEvent_3, PkTransition_3) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var PkTransitionSlide = /** @class */ (function () {
+        function PkTransitionSlide(scene) {
+            this.event = new PkEvent_3.PkEvent('Transitions.Slide', this);
+            this.changeTime = 300; // ms
+            this.scene = scene;
+        }
+        PkTransitionSlide.prototype.start = function () {
+            var _this = this;
+            // create bg
+            var points = [
+                (this.scene.game.canvas.width / 2) * (-1), 0,
+                this.scene.game.canvas.width, 0,
+                this.scene.game.canvas.width, this.scene.game.canvas.height,
+                0, this.scene.game.canvas.height // 3
+            ];
+            var poly = this.scene.add.polygon(this.scene.game.canvas.width * 1.5, 0, points, 0x000000);
+            poly.setOrigin(0, 0);
+            this.scene.add.tween({
+                targets: poly,
+                x: 0,
+                duration: this.changeTime,
+                onComplete: function () {
+                    // dispatch end transition | mandatory
+                    _this.event.dispatch(PkTransition_3.E.OnTransitionEndStart);
+                },
+                onUpdate: function () {
+                    _this.scene.children.bringToTop(poly);
+                }
+            });
+        };
+        PkTransitionSlide.prototype.end = function () {
+            var _this = this;
+            this.scene.scene.setVisible(false);
+            var points = [
+                0, 0,
+                this.scene.game.canvas.width, 0,
+                this.scene.game.canvas.width + (this.scene.game.canvas.width / 2), this.scene.game.canvas.height,
+                0, this.scene.game.canvas.height // 3
+            ];
+            var poly = this.scene.add.polygon(0, 0, points, 0x000000);
+            poly.setOrigin(0, 0);
+            this.scene.add.tween({
+                targets: poly,
+                x: -(this.scene.game.canvas.width * 1.5),
+                duration: this.changeTime,
+                onComplete: function () {
+                    // dispatch end transition | mandatory
+                    _this.event.dispatch(PkTransition_3.E.OnTransitionEndEnd);
+                },
+                onUpdate: function () {
+                    _this.scene.children.bringToTop(poly);
+                    _this.scene.scene.setVisible(true);
+                }
+            });
+        };
+        return PkTransitionSlide;
+    }());
+    exports.PkTransitionSlide = PkTransitionSlide;
+});
+define("game/scenes/Main", ["require", "exports", "pkframe/scene/PKScene", "game/elements/Characters/Heroes/Knight", "game/elements/Text/MiniPhrase", "pkframe/scene/transitions/Slide", "pkframe/utils/PkUtils"], function (require, exports, PKScene_3, Knight_1, MiniPhrase_1, Slide_1, PkUtils_3) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Main = /** @class */ (function (_super) {
@@ -1027,6 +885,10 @@ define("game/scenes/Main", ["require", "exports", "pkframe/scene/PKScene", "game
             _this.timeouts = new Array();
             return _this;
         }
+        Main.prototype.init = function () {
+            _super.prototype.init.call(this);
+            this.transition.transitionAnimation = new Slide_1.PkTransitionSlide(this);
+        };
         Main.prototype.create = function () {
             var _this = this;
             _super.prototype.create.call(this);
@@ -1038,8 +900,6 @@ define("game/scenes/Main", ["require", "exports", "pkframe/scene/PKScene", "game
             this.wallBottomMiddleTile = this.add.tileSprite(0, -12, this.game.canvas.width, 16, 'wall-top-middle');
             this.wallMiddleTile.setOrigin(0, 0);
             this.wallBottomMiddleTile.setOrigin(0, 0);
-            this.wallMiddleTile.visible = false;
-            this.wallBottomMiddleTile.visible = false;
             this.wallMiddleTile.alpha = 0.7;
             this.wallBottomMiddleTile.alpha = 0.5;
             this.addToLayer('scene-bg', this.wallMiddleTile);
@@ -1048,7 +908,7 @@ define("game/scenes/Main", ["require", "exports", "pkframe/scene/PKScene", "game
             var bgFade = this.add.sprite(0, 0, 'bg-fade-right');
             bgFade.setOrigin(0, 0);
             this.addToLayer('scene-front', bgFade);
-            var blinkTime = 250;
+            var blinkTime = 800;
             this.clickTokPlay = MiniPhrase_1.MiniPhrase.build(this, [
                 { text: '*CLICK*', duration: blinkTime },
                 { text: 'TO', duration: blinkTime },
@@ -1056,91 +916,13 @@ define("game/scenes/Main", ["require", "exports", "pkframe/scene/PKScene", "game
             ]);
             this.clickTokPlay.create();
             this.addToLayer('scene-front-front', this.clickTokPlay);
-            /*
-            this.wallCollumnMiddle = this.add.tileSprite(0, 0, 16, this.game.canvas.height, 'wall-column-middle');
-            this.wallCollumnMiddle.setOrigin(0, 0)
-            this.wallCollumnMiddle.x += 20;
-            */
-            // bg
-            /*
-            var wallMiddleTile = this.add.tileSprite(0, 0, this.game.canvas.width, this.game.canvas.height, 'wall-middle');
-            wallMiddleTile.setOrigin(0, 0)
-            var wallTopMiddleTile = this.add.tileSprite(0, -12, this.game.canvas.width, 16, 'wall-top-middle');
-            wallTopMiddleTile.setOrigin(0, 0)
-            // */
-            /*
-            var txt:Phaser.GameObjects.Text = this.add.text(0, 0,
-                'VOXEL', // text
-                {
-                    fontFamily:'I Pixel U',
-                    fontSize: 14,
-                    color: "#ffffff"
-                } // font style
-            );
-    
-            txt.setOrigin(.5, .5);
-            txt.setStroke("#000", 5);
-            txt.x = this.game.canvas.width / 2;
-            txt.y = this.game.canvas.height / 2;
-            */
-            /*
-            var text:MiniText = new MiniText(this, "VOXEL");
-            text.create();
-            text.x = 20;
-            */
-            /*
-            var knight:Knight = new Knight(this);
-            knight.create();
-            knight.x += 7;
-            knight.y -= 3;
-    
-            var mage:Mage = new Mage(this);
-            mage.create();
-            mage.x += 30;
-            mage.y -= 3;
-    
-            var rogue:Rogue = new Rogue(this);
-            rogue.create();
-            rogue.x += 53;
-            rogue.y -= 3;
-            */
-            // text.x = this.game.canvas.width / 2;
-            // text.y = this.game.canvas.height / 2;
-            setTimeout(function () {
+            var startGameClickArea = PkUtils_3.PkUtils.createSquare(this, this.game.canvas.width, this.game.canvas.height, 0x0000FF);
+            startGameClickArea.alpha = 0.01;
+            startGameClickArea.setInteractive({ useHandCursor: true });
+            startGameClickArea.on('pointerup', function (pointer) {
                 _this.transition.change('HeroSelect');
-                console.log('- OUT -');
-            }, 1000 * 5);
-            this.opening();
-            // this.waiting();
-        };
-        Main.prototype.opening = function () {
-            var _this = this;
-            var mp = MiniPhrase_1.MiniPhrase.build(this, [
-                { text: 'WEALCOME', duration: 550 },
-                { text: 'TO', duration: 450 },
-                { text: 'DICK', duration: 600 },
-                { text: 'SIZE', duration: 600 },
-            ]);
-            mp.event.add(MiniPhrase_1.E.OnPhaseEnd, function () {
-                var mp = MiniPhrase_1.MiniPhrase.build(_this, [
-                    { text: 'DUNGEON', duration: 600 },
-                    { text: '', duration: 300 },
-                    { text: 'DUNGEON', duration: 350 },
-                    { text: '', duration: 300 },
-                    { text: 'DUNGEON', duration: 350 },
-                ]);
-                mp.play();
-                mp.event.add(MiniPhrase_1.E.OnPhaseEnd, function () {
-                    _this.waiting();
-                }, _this);
-            }, this);
-            mp.play();
-        };
-        Main.prototype.waiting = function () {
-            var _this = this;
-            this.wallMiddleTile.visible = true;
-            this.wallBottomMiddleTile.visible = true;
-            var knight = new Knight_2.Knight(this);
+            });
+            var knight = new Knight_1.Knight(this);
             knight.create();
             knight.x += 7;
             knight.y -= 3;
@@ -1168,9 +950,11 @@ define("game/scenes/Main", ["require", "exports", "pkframe/scene/PKScene", "game
             this.timeouts.push(tid);
             var tid = setInterval(function () {
                 _this.clickTokPlay.play();
-            }, 5100);
+            }, 1000 * 10); // 10 sec
             this.timeouts.push(tid);
-            // this.clickTokPlay.play();
+            this.timeouts.push(setTimeout(function () {
+                _this.clickTokPlay.play();
+            }, 500));
         };
         Main.prototype.update = function () {
             this.wallMiddleTile.tilePositionX += 0.8;
@@ -1189,10 +973,149 @@ define("game/scenes/Main", ["require", "exports", "pkframe/scene/PKScene", "game
             //
         };
         return Main;
-    }(PKScene_4.PkScene));
+    }(PKScene_3.PkScene));
     exports.Main = Main;
 });
-define("game/scenes/HeroSelect", ["require", "exports", "pkframe/scene/PKScene", "game/elements/Characters/Heroes/Knight", "game/elements/Characters/Heroes/Mage", "game/elements/Characters/Heroes/Rogue", "game/elements/Text/MiniPhrase", "pkframe/utils/PkUtils", "game/Types", "pkframe/scene/transitions/Slide"], function (require, exports, PKScene_5, Knight_3, Mage_2, Rogue_2, MiniPhrase_2, PkUtils_3, Types_2, Slide_2) {
+define("game/Types", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var T;
+    (function (T) {
+        var Heroes;
+        (function (Heroes) {
+            Heroes[Heroes["KNIGHT"] = 0] = "KNIGHT";
+            Heroes[Heroes["MAGE"] = 1] = "MAGE";
+            Heroes[Heroes["ROGUE"] = 2] = "ROGUE";
+        })(Heroes = T.Heroes || (T.Heroes = {}));
+    })(T = exports.T || (exports.T = {}));
+});
+define("game/elements/Characters/Heroes/Mage", ["require", "exports", "game/elements/Characters/Hero"], function (require, exports, Hero_2) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var Mage = /** @class */ (function (_super) {
+        __extends(Mage, _super);
+        function Mage(scene) {
+            var _this = _super.call(this, scene) || this;
+            // meta
+            _this.name = "Mage";
+            // stats
+            _this.ap = 3; // action points
+            _this.hp = 3; // health points
+            _this.atk = 4; // attack
+            _this.animationIdle = _this.scene.anims.create({
+                key: 'idle' + _this.getId(),
+                frames: [
+                    { key: 'mage-idle-1' },
+                    { key: 'mage-idle-2' },
+                    { key: 'mage-idle-3' },
+                    { key: 'mage-idle-4' }
+                ],
+                frameRate: 8,
+                repeat: -1
+            });
+            return _this;
+        }
+        return Mage;
+    }(Hero_2.Hero));
+    exports.Mage = Mage;
+});
+define("game/elements/Characters/Heroes/Rogue", ["require", "exports", "game/elements/Characters/Hero"], function (require, exports, Hero_3) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var Rogue = /** @class */ (function (_super) {
+        __extends(Rogue, _super);
+        function Rogue(scene) {
+            var _this = _super.call(this, scene) || this;
+            // meta
+            _this.name = "Rogue";
+            // stats
+            _this.ap = 5; // action points
+            _this.hp = 2; // health points
+            _this.atk = 4; // attack
+            _this.animationIdle = _this.scene.anims.create({
+                key: 'idle' + _this.getId(),
+                frames: [
+                    { key: 'rogue-idle-1' },
+                    { key: 'rogue-idle-2' },
+                    { key: 'rogue-idle-3' },
+                    { key: 'rogue-idle-4' }
+                ],
+                frameRate: 8,
+                repeat: -1
+            });
+            return _this;
+        }
+        return Rogue;
+    }(Hero_3.Hero));
+    exports.Rogue = Rogue;
+});
+define("game/scenes/GameScene", ["require", "exports", "pkframe/scene/PKScene", "game/Types", "game/elements/Characters/Heroes/Knight", "game/elements/Characters/Heroes/Mage", "game/elements/Characters/Heroes/Rogue", "pkframe/scene/transitions/Slide"], function (require, exports, PKScene_4, Types_1, Knight_2, Mage_1, Rogue_1, Slide_2) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var GameScene = /** @class */ (function (_super) {
+        __extends(GameScene, _super);
+        function GameScene() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        GameScene.prototype.init = function () {
+            _super.prototype.init.call(this);
+            this.transition.transitionAnimation = new Slide_2.PkTransitionSlide(this);
+        };
+        GameScene.prototype.create = function () {
+            var _this = this;
+            _super.prototype.create.call(this);
+            console.log('- GameScene create ');
+            if (!this.initData.length)
+                return;
+            //
+            switch (this.initData[0]) {
+                case Types_1.T.Heroes.KNIGHT:
+                    this.hero = new Knight_2.Knight(this);
+                    break;
+                case Types_1.T.Heroes.MAGE:
+                    this.hero = new Mage_1.Mage(this);
+                    break;
+                case Types_1.T.Heroes.ROGUE:
+                    this.hero = new Rogue_1.Rogue(this);
+                    break;
+                default:
+                    break;
+            }
+            this.hero.create();
+            setTimeout(function () {
+                console.log('back');
+                _this.transition.change('HeroSelect');
+            }, 1500);
+            /*
+            
+            var points:Array<number> = [
+                0, 0, // 1
+                this.game.canvas.width, 0,  // 2
+                this.game.canvas.width + (this.game.canvas.width / 2), this.game.canvas.height, // 4
+                0, this.game.canvas.height // 3
+            ]
+    
+            this.poly = this.add.polygon(0, 0, points, 0x0000FF);
+            this.poly.setOrigin(0, 0);
+            
+    
+    
+            
+    
+            setTimeout(()=>{
+                console.log('--?')
+                this.poly.x = -this.poly.width;
+            }, 1500)
+            */
+        };
+        GameScene.prototype.update = function () {
+            // this.poly.x -= 0.5;
+        };
+        return GameScene;
+    }(PKScene_4.PkScene));
+    exports.GameScene = GameScene;
+});
+define("game/scenes/HeroSelect", ["require", "exports", "pkframe/scene/PKScene", "game/elements/Characters/Heroes/Knight", "game/elements/Characters/Heroes/Mage", "game/elements/Characters/Heroes/Rogue", "game/elements/Text/MiniPhrase", "pkframe/utils/PkUtils", "game/Types", "pkframe/scene/transitions/Slide"], function (require, exports, PKScene_5, Knight_3, Mage_2, Rogue_2, MiniPhrase_2, PkUtils_4, Types_2, Slide_3) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var HeroSelect = /** @class */ (function (_super) {
@@ -1205,7 +1128,7 @@ define("game/scenes/HeroSelect", ["require", "exports", "pkframe/scene/PKScene",
         }
         HeroSelect.prototype.init = function () {
             _super.prototype.init.call(this);
-            this.transition.transitionAnimation = new Slide_2.PkTransitionSlide(this);
+            this.transition.transitionAnimation = new Slide_3.PkTransitionSlide(this);
         };
         HeroSelect.prototype.create = function () {
             var _this = this;
@@ -1251,25 +1174,25 @@ define("game/scenes/HeroSelect", ["require", "exports", "pkframe/scene/PKScene",
             this.addToLayer('scene-bg', this.mage);
             this.addToLayer('scene-bg', this.rogue);
             // click area
-            this.knightClickArea = PkUtils_3.PkUtils.createSquare(this, this.game.canvas.width / 3, this.game.canvas.height, 0xFF0000);
+            this.knightClickArea = PkUtils_4.PkUtils.createSquare(this, this.game.canvas.width / 3, this.game.canvas.height, 0xFF0000);
             this.knightClickArea.alpha = 0.01;
-            this.mageClickArea = PkUtils_3.PkUtils.createSquare(this, this.game.canvas.width / 3, this.game.canvas.height, 0x0000FF);
+            this.mageClickArea = PkUtils_4.PkUtils.createSquare(this, this.game.canvas.width / 3, this.game.canvas.height, 0x0000FF);
             this.mageClickArea.x = this.game.canvas.width / 3;
             this.mageClickArea.alpha = 0.01;
-            this.rogueClickArea = PkUtils_3.PkUtils.createSquare(this, this.game.canvas.width / 3, this.game.canvas.height, 0x00FF00);
+            this.rogueClickArea = PkUtils_4.PkUtils.createSquare(this, this.game.canvas.width / 3, this.game.canvas.height, 0x00FF00);
             this.rogueClickArea.x = (this.game.canvas.width / 3) * 2;
             this.rogueClickArea.alpha = 0.01;
             this.knightClickArea.setInteractive({ useHandCursor: true });
             this.knightClickArea.on('pointerup', function (pointer) {
-                _this.transition.change('Text', Types_2.T.Heroes.KNIGHT);
+                _this.transition.change('GameScene', Types_2.T.Heroes.KNIGHT);
             });
             this.mageClickArea.setInteractive({ useHandCursor: true });
             this.mageClickArea.on('pointerup', function (pointer) {
-                _this.transition.change('Text', Types_2.T.Heroes.MAGE);
+                _this.transition.change('GameScene', Types_2.T.Heroes.MAGE);
             });
             this.rogueClickArea.setInteractive({ useHandCursor: true });
             this.rogueClickArea.on('pointerup', function (pointer) {
-                _this.transition.change('Text', Types_2.T.Heroes.ROGUE);
+                _this.transition.change('GameScene', Types_2.T.Heroes.ROGUE);
             });
             this.heroesIntro();
         };
@@ -1325,17 +1248,60 @@ define("game/scenes/HeroSelect", ["require", "exports", "pkframe/scene/PKScene",
     }(PKScene_5.PkScene));
     exports.HeroSelect = HeroSelect;
 });
-define("game/Game", ["require", "exports", "jquery", "pkframe/PkGame", "pkframe/PkConfig", "game/Loader", "game/scenes/Main", "game/scenes/TextScene", "game/scenes/HeroSelect"], function (require, exports, $, PkGame_4, PkConfig_2, Loader_1, Main_1, TextScene_1, HeroSelect_1) {
+define("game/scenes/Intro", ["require", "exports", "pkframe/scene/PKScene", "game/elements/Text/MiniPhrase", "pkframe/scene/transitions/Slide"], function (require, exports, PKScene_6, MiniPhrase_3, Slide_4) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var IntroScene = /** @class */ (function (_super) {
+        __extends(IntroScene, _super);
+        function IntroScene() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        IntroScene.prototype.init = function () {
+            _super.prototype.init.call(this);
+            this.transition.transitionAnimation = new Slide_4.PkTransitionSlide(this);
+        };
+        IntroScene.prototype.create = function () {
+            var _this = this;
+            _super.prototype.create.call(this);
+            console.log('INTRO SCENE');
+            var mp = MiniPhrase_3.MiniPhrase.build(this, [
+                { text: 'WEALCOME', duration: 850 },
+                { text: 'TO', duration: 450 },
+                { text: 'DICK', duration: 800 },
+                { text: 'SIZE', duration: 800 },
+            ]);
+            mp.event.add(MiniPhrase_3.E.OnPhaseEnd, function () {
+                var mp = MiniPhrase_3.MiniPhrase.build(_this, [
+                    { text: 'DUNGEON', duration: 800 },
+                    { text: '', duration: 300 },
+                    { text: 'DUNGEON', duration: 350 },
+                    { text: '', duration: 300 },
+                    { text: 'DUNGEON', duration: 350 },
+                ]);
+                mp.play();
+                mp.event.add(MiniPhrase_3.E.OnPhaseEnd, function () {
+                    console.log('CHANGE TO MAIN');
+                    _this.transition.change('Main');
+                }, _this);
+            }, this);
+            mp.play();
+        };
+        return IntroScene;
+    }(PKScene_6.PkScene));
+    exports.IntroScene = IntroScene;
+});
+define("game/Game", ["require", "exports", "jquery", "pkframe/PkGame", "pkframe/PkConfig", "game/Loader", "game/scenes/Main", "game/scenes/GameScene", "game/scenes/HeroSelect", "game/scenes/Intro"], function (require, exports, $, PkGame_4, PkConfig_2, Loader_1, Main_1, GameScene_1, HeroSelect_1, Intro_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Game = /** @class */ (function (_super) {
         __extends(Game, _super);
         function Game() {
             var _this = _super.call(this, new Config()) || this;
-            // add default state
+            // add states
+            _this.scene.add('Intro', Intro_1.IntroScene);
             _this.scene.add('Main', Main_1.Main);
             _this.scene.add('HeroSelect', HeroSelect_1.HeroSelect);
-            _this.scene.add('Text', TextScene_1.TextScene);
+            _this.scene.add('GameScene', GameScene_1.GameScene);
             return _this;
         }
         return Game;
@@ -1350,7 +1316,7 @@ define("game/Game", ["require", "exports", "jquery", "pkframe/PkGame", "pkframe/
             // loading all* game assets
             _this.loaderState = Loader_1.Loader;
             _this.canvasSize = [80, 30];
-            _this.initialState = 'HeroSelect';
+            _this.initialState = 'Intro';
             return _this;
         }
         return Config;
@@ -1423,7 +1389,7 @@ define("pkframe/scene/PkParallax", ["require", "exports", "pkframe/scene/PkLayer
     }());
     exports.PkParallax = PkParallax;
 });
-define("pkframe/screen/PKScreen", ["require", "exports", "pkframe/element/PkElement", "pkframe/utils/PkUtils"], function (require, exports, PkElement_6, PkUtils_4) {
+define("pkframe/screen/PKScreen", ["require", "exports", "pkframe/element/PkElement", "pkframe/utils/PkUtils"], function (require, exports, PkElement_6, PkUtils_5) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var PkScreen = /** @class */ (function (_super) {
@@ -1439,7 +1405,7 @@ define("pkframe/screen/PKScreen", ["require", "exports", "pkframe/element/PkElem
         };
         PkScreen.prototype.createBg = function () {
             // create a generic background 
-            this.bg = PkUtils_4.PkUtils.createSquare(this.scene, this.scene.game.canvas.width, this.scene.game.canvas.height, 0x000000);
+            this.bg = PkUtils_5.PkUtils.createSquare(this.scene, this.scene.game.canvas.width, this.scene.game.canvas.height, 0x000000);
             this.bg.alpha = this.bgAlpha;
             if (this.blockOverInput) {
                 this.bg.input.enabled = true;

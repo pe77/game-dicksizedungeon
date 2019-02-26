@@ -7,7 +7,7 @@ import { Mage } from "../elements/Characters/Heroes/Mage";
 import { Rogue } from "../elements/Characters/Heroes/Rogue";
 import { PkTransitionSlide } from "../../pkframe/scene/transitions/Slide";
 
-export class TextScene extends PkScene {
+export class GameScene extends PkScene {
     
     hero:Hero;
     poly:Phaser.GameObjects.Polygon
@@ -22,7 +22,7 @@ export class TextScene extends PkScene {
     {
         super.create();
 
-        console.log('- TextScene create ')
+        console.log('- GameScene create ')
 
 
         if(!this.initData.length)
@@ -51,7 +51,7 @@ export class TextScene extends PkScene {
 
         setTimeout(()=>{
             console.log('back')
-            // this.transition.change('HeroSelect')
+            this.transition.change('HeroSelect')
         }, 1500)
         /*
         

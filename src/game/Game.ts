@@ -3,8 +3,9 @@ import { PkGame } from "../pkframe/PkGame";
 import { PkConfig } from '../pkframe/PkConfig';
 import { Loader, Preloader } from './Loader';
 import { Main } from './scenes/Main';
-import { TextScene } from './scenes/TextScene';
+import { GameScene } from './scenes/GameScene';
 import { HeroSelect } from './scenes/HeroSelect';
+import { IntroScene } from './scenes/Intro';
 
 
 
@@ -16,10 +17,11 @@ export class Game extends PkGame {
 
         super(new Config()); 
 
-        // add default state
+        // add states
+        this.scene.add('Intro', IntroScene);
         this.scene.add('Main', Main);
         this.scene.add('HeroSelect', HeroSelect);
-        this.scene.add('Text', TextScene);
+        this.scene.add('GameScene', GameScene);
 
     }
 }
@@ -40,7 +42,7 @@ class Config extends PkConfig
         
         this.canvasSize = [80, 30];
 
-        this.initialState = 'HeroSelect';
+        this.initialState = 'Intro';
     }
 }
 

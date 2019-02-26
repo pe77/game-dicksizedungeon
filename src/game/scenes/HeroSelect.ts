@@ -1,5 +1,5 @@
 import { PkScene } from "../../pkframe/scene/PKScene";
-import { TextScene } from "./TextScene";
+import { TextScene } from "./GameScene";
 import { PkElement } from "../../pkframe/element/PkElement";
 import { MiniText } from "../elements/Text/MiniText";
 import { Hero } from "../elements/Characters/Hero";
@@ -104,17 +104,17 @@ export class HeroSelect extends PkScene {
         
         this.knightClickArea.setInteractive({ useHandCursor: true  })
         this.knightClickArea.on('pointerup', pointer=>{
-            this.transition.change('Text', T.Heroes.KNIGHT)
+            this.transition.change('GameScene', T.Heroes.KNIGHT)
         })
 
         this.mageClickArea.setInteractive({ useHandCursor: true  })
         this.mageClickArea.on('pointerup', pointer=>{
-            this.transition.change('Text', T.Heroes.MAGE)
+            this.transition.change('GameScene', T.Heroes.MAGE)
         })
 
         this.rogueClickArea.setInteractive({ useHandCursor: true  })
         this.rogueClickArea.on('pointerup', pointer=>{
-            this.transition.change('Text', T.Heroes.ROGUE)
+            this.transition.change('GameScene', T.Heroes.ROGUE)
         })
         
        
