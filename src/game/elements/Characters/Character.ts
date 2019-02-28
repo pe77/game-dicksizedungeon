@@ -1,6 +1,7 @@
 import { PkElement } from "../../../pkframe/element/PkElement";
 import { ICharacter } from "./Base";
 import { PkScene } from "../../../pkframe/scene/PKScene";
+import { GameEvents } from "../../Events";
 
 export class Character extends PkElement implements ICharacter
 {
@@ -34,7 +35,18 @@ export class Character extends PkElement implements ICharacter
 
     attack(char:Character):number
     {
-        return 0;
+        var damage:number = 1;
+
+        char.playDamageAnimation(damage);
+        return damage;
+    }
+
+    private playDamageAnimation(damage:number)
+    {
+        // play damage animation...
+        setTimeout(()=>{
+            this.event.dispatch(GameEvents.OnCharacterPlayDamageAnimation, (this.hp < 0))
+        }, 100)
     }
 
     idle()

@@ -6,4 +6,12 @@ export module T
         MAGE,
         ROGUE
     }
+
+    export enum DungeonsFound
+    {
+        NOTHING,
+        MONSTER,
+        CHEST,
+        QUESTION
+    }
 }

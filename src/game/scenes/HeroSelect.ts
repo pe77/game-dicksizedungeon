@@ -1,5 +1,4 @@
 import { PkScene } from "../../pkframe/scene/PKScene";
-import { TextScene } from "./GameScene";
 import { PkElement } from "../../pkframe/element/PkElement";
 import { MiniText } from "../elements/Text/MiniText";
 import { Hero } from "../elements/Characters/Hero";
