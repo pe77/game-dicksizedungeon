@@ -6,6 +6,7 @@ import { Knight } from "../elements/Characters/Heroes/Knight";
 import { Mage } from "../elements/Characters/Heroes/Mage";
 import { Rogue } from "../elements/Characters/Heroes/Rogue";
 import { PkTransitionSlide } from "../../pkframe/scene/transitions/Slide";
+import { Layers } from "../Layers";
 
 export class GameScene extends PkScene {
     
@@ -21,6 +22,12 @@ export class GameScene extends PkScene {
     create()
     {
         super.create();
+
+        this.addLayer(Layers.BG);
+        this.addLayer(Layers.CHAR);
+        this.addLayer(Layers.FX);
+        this.addLayer(Layers.FG);
+        this.addLayer(Layers.UI);
 
         console.log('- GameScene create ')
 

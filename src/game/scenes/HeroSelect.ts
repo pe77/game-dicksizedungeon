@@ -9,6 +9,7 @@ import { MiniPhrase, E } from "../elements/Text/MiniPhrase";
 import { PkUtils } from "../../pkframe/utils/PkUtils";
 import { T } from "../Types";
 import { PkTransitionSlide } from "../../pkframe/scene/transitions/Slide";
+import { Layers } from "../Layers";
 
 export class HeroSelect extends PkScene {
     
@@ -38,10 +39,10 @@ export class HeroSelect extends PkScene {
         super.create();
 
         console.log('- hero select creating layers')
-        this.addLayer('scene-bg');
-        this.addLayer('characters');
-        this.addLayer('scene-front');
-        this.addLayer('scene-front-front'); // kek
+        this.addLayer(Layers.BG);
+        this.addLayer(Layers.CHAR);
+        this.addLayer(Layers.FG);
+        this.addLayer(Layers.UI); // kek
 
 
         // walls
@@ -59,11 +60,11 @@ export class HeroSelect extends PkScene {
             {text:'HERO', duration:blinkTime + 100},
         ]);
         this.chooseYourHero.create();
-        this.addToLayer('scene-front-front', this.chooseYourHero)
+        this.addToLayer(Layers.UI, this.chooseYourHero)
 
         this.wallMiddleTile.alpha = 0.7;
 
-        this.addToLayer('scene-bg', this.wallMiddleTile);
+        this.addToLayer(Layers.BG, this.wallMiddleTile);
 
         // heores
         this.knight = new Knight(this);
@@ -84,9 +85,9 @@ export class HeroSelect extends PkScene {
         this.rogue.x += 63;
         this.rogue.y += 200;
 
-        this.addToLayer('scene-bg', this.knight);
-        this.addToLayer('scene-bg', this.mage);
-        this.addToLayer('scene-bg', this.rogue);
+        this.addToLayer(Layers.BG, this.knight);
+        this.addToLayer(Layers.BG, this.mage);
+        this.addToLayer(Layers.BG, this.rogue);
 
         // click area
         this.knightClickArea = PkUtils.createSquare(this, this.game.canvas.width / 3, this.game.canvas.height, 0xFF0000)

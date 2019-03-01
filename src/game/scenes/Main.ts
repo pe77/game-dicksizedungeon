@@ -3,6 +3,7 @@ import { Knight } from "../elements/Characters/Heroes/Knight";
 import { MiniPhrase, E } from "../elements/Text/MiniPhrase";
 import { PkTransitionSlide } from "../../pkframe/scene/transitions/Slide";
 import { PkUtils } from "../../pkframe/utils/PkUtils";
+import { Layers } from "../Layers";
 
 export class Main extends PkScene {
     
@@ -22,10 +23,10 @@ export class Main extends PkScene {
     {
         super.create();
 
-        this.addLayer('scene-bg');
-        this.addLayer('characters');
-        this.addLayer('scene-front');
-        this.addLayer('scene-front-front'); // kek
+        this.addLayer(Layers.BG);
+        this.addLayer(Layers.CHAR);
+        this.addLayer(Layers.FG);
+        this.addLayer(Layers.UI);
 
         this.wallMiddleTile = this.add.tileSprite(0, 0, this.game.canvas.width, this.game.canvas.height, 'wall-middle');
         this.wallBottomMiddleTile = this.add.tileSprite(0, -12, this.game.canvas.width, 16, 'wall-top-middle');
@@ -36,14 +37,14 @@ export class Main extends PkScene {
         this.wallMiddleTile.alpha = 0.7;
         this.wallBottomMiddleTile.alpha = 0.5;
 
-        this.addToLayer('scene-bg', this.wallMiddleTile);
-        this.addToLayer('scene-bg', this.wallBottomMiddleTile);
+        this.addToLayer(Layers.BG, this.wallMiddleTile);
+        this.addToLayer(Layers.BG, this.wallBottomMiddleTile);
 
 
         // bg fade
         var bgFade:Phaser.GameObjects.Sprite = this.add.sprite(0, 0, 'bg-fade-right');
         bgFade.setOrigin(0, 0)
-        this.addToLayer('scene-front', bgFade);
+        this.addToLayer(Layers.FG, bgFade);
 
 
         var blinkTime:number = 800;
@@ -53,7 +54,8 @@ export class Main extends PkScene {
             {text:'PLAY', duration:blinkTime},
         ]);
         this.clickTokPlay.create();
-        this.addToLayer('scene-front-front', this.clickTokPlay)
+        
+        this.addToLayer(Layers.UI, this.clickTokPlay)
 
         var startGameClickArea:Phaser.GameObjects.Sprite = PkUtils.createSquare(this, this.game.canvas.width, this.game.canvas.height, 0x0000FF);
         startGameClickArea.alpha = 0.01;
@@ -69,7 +71,7 @@ export class Main extends PkScene {
         knight.y -= 3;
         knight.run();
 
-        this.addToLayer('characters', knight);
+        this.addToLayer(Layers.CHAR, knight);
         
         // creating collumn - back
         var tid:number = setInterval(()=>{
@@ -78,7 +80,7 @@ export class Main extends PkScene {
             wallCollumnMiddle.setOrigin(0, 0)
             wallCollumnMiddle.x += this.game.canvas.width;
 
-            this.addToLayer('scene-bg', wallCollumnMiddle);
+            this.addToLayer(Layers.BG, wallCollumnMiddle);
 
             this.wallCollumns.push(wallCollumnMiddle);
 
@@ -98,7 +100,7 @@ export class Main extends PkScene {
             wallCollumnMiddle.x += this.game.canvas.width;
             // wallCollumnMiddle.tint = 0;
 
-            this.addToLayer('scene-front', wallCollumnMiddle);
+            this.addToLayer(Layers.FG, wallCollumnMiddle);
 
             this.wallCollumns.push(wallCollumnMiddle);
         }, 3500);
